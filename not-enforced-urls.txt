@@ -1,0 +1,2 @@
+https://${DomainName}/innloggingsinfo/internal/isAlive*
+https://${DomainName}/innloggingsinfo/*
