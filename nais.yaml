@@ -10,7 +10,7 @@ healthcheck:
   liveness:
     path: innloggingsinfo/internal/isalive.txt
   readiness:
-    path: saksoversikt/internal/isready.txt
+    path: innloggingsinfo/internal/isready.txt
 ingress:
   enabled: true
 resources:
