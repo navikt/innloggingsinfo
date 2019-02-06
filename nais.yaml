@@ -17,3 +17,9 @@ ingress:
 resources:
   limits:
     cpu: 3
+fasitResources:
+  used:
+  - alias: appres.cms
+    resourceType: baseUrl
+    propertyMap:
+      url: APPRES_CMS_URL
