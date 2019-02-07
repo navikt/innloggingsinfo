@@ -107,9 +107,11 @@ function renderFeilmelding(err) {
 }
 
 function init() {
-    fetch('/innloggingsinfo/api/tekster', { credentials: 'same-origin' })
+    fetch('/innloggingsinfo-api/api/tekster', { credentials: 'same-origin' })
         .then((res) => {
-            if (!res.ok) {
+            if (res.redirected) {
+                window.location.assign(res.url);
+            } else if (!res.ok) {
                 throw new Error();
             }
             return res;
