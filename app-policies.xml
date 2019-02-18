@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Policies
+        PUBLIC "-//OpenSSO Policy Administration DTD//EN"
+        "jar://com/sun/identity/policy/policyAdmin.dtd">
+
+<Policies>
+    <Policy name="Innloggingsinfo_001" referralPolicy="false" active="true">
+        <Rule name="rule_Innloggingsinfo_001_01">
+            <ServiceName name="iPlanetAMWebAgentService"/>
+            <ResourceName name="https://${DomainName}/innloggingsinfo"/>
+            <AttributeValuePair>
+                <Attribute name="GET"/>
+                <Value>allow</Value>
+            </AttributeValuePair>
+        </Rule>
+
+        <Subjects>
+            <Subject name="subject_Innloggingsinfo_001_01" type="AuthenticatedUsers" includeType="inclusive">
+            </Subject>
+        </Subjects>
+
+        <Conditions>
+            <Condition name="condition_Innloggingsinfo_001_AuthenticationLevel" type="AuthLevelCondition">
+                <AttributeValuePair>
+                    <Attribute name="AuthLevel"/>
+                    <Value>3</Value>
+                </AttributeValuePair>
+            </Condition>
+        </Conditions>
+    </Policy>
+</Policies>
