@@ -13,17 +13,31 @@
                 <Value>allow</Value>
             </AttributeValuePair>
         </Rule>
-
+        <Rule name="rule_Innloggingsinfo_001_02">
+            <ServiceName name="iPlanetAMWebAgentService"/>
+            <ResourceName name="https://${DomainName}/innloggingsinfo/css/index.css"/>
+            <AttributeValuePair>
+                <Attribute name="GET"/>
+                <Value>allow</Value>
+            </AttributeValuePair>
+        </Rule>
+        <Rule name="rule_Innloggingsinfo_001_02">
+            <ServiceName name="iPlanetAMWebAgentService"/>
+            <ResourceName name="https://${DomainName}/innloggingsinfo/js/index.js"/>
+            <AttributeValuePair>
+                <Attribute name="GET"/>
+                <Value>allow</Value>
+            </AttributeValuePair>
+        </Rule>
         <Subjects>
             <Subject name="subject_Innloggingsinfo_001_01" type="AuthenticatedUsers" includeType="inclusive">
             </Subject>
         </Subjects>
-
         <Conditions>
             <Condition name="condition_Innloggingsinfo_001_AuthenticationLevel" type="AuthLevelCondition">
                 <AttributeValuePair>
                     <Attribute name="AuthLevel"/>
-                    <Value>3</Value>
+                    <Value>2</Value>
                 </AttributeValuePair>
             </Condition>
         </Conditions>
