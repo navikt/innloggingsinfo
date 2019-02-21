@@ -15,13 +15,21 @@
         </Rule>
         <Rule name="rule_Innloggingsinfo_001_02">
             <ServiceName name="iPlanetAMWebAgentService"/>
+            <ResourceName name="https://${DomainName}/innloggingsinfo/"/>
+            <AttributeValuePair>
+                <Attribute name="GET"/>
+                <Value>allow</Value>
+            </AttributeValuePair>
+        </Rule>
+        <Rule name="rule_Innloggingsinfo_001_03">
+            <ServiceName name="iPlanetAMWebAgentService"/>
             <ResourceName name="https://${DomainName}/innloggingsinfo/css/index.css"/>
             <AttributeValuePair>
                 <Attribute name="GET"/>
                 <Value>allow</Value>
             </AttributeValuePair>
         </Rule>
-        <Rule name="rule_Innloggingsinfo_001_02">
+        <Rule name="rule_Innloggingsinfo_001_04">
             <ServiceName name="iPlanetAMWebAgentService"/>
             <ResourceName name="https://${DomainName}/innloggingsinfo/js/index.js"/>
             <AttributeValuePair>
