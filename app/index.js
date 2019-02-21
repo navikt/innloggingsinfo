@@ -107,7 +107,7 @@ function renderFeilmelding(err) {
 }
 
 function init() {
-    fetch('/innloggingsinfo-api/api/tekster', { credentials: 'same-origin' })
+    fetch('/innloggingsinfo-api/api/tekster')
         .then((res) => {
             if (res.redirected) {
                 window.location.assign(res.url);
