@@ -9,9 +9,9 @@ replicas:
 port: 8080
 healthcheck:
   liveness:
-    path: innloggingsinfo/internal/isalive.txt
+    path: innloggingsinfo/internal/isAlive
   readiness:
-    path: innloggingsinfo/internal/isalive.txt
+    path: innloggingsinfo/internal/isReady
 ingress:
   enabled: true
 resources:
