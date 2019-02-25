@@ -23,13 +23,29 @@
         </Rule>
         <Rule name="rule_Innloggingsinfo_001_03">
             <ServiceName name="iPlanetAMWebAgentService"/>
-            <ResourceName name="https://${DomainName}/innloggingsinfo/css/index.css"/>
+            <ResourceName name="https://${DomainName}/innloggingsinfo/css/index.css?*"/>
             <AttributeValuePair>
                 <Attribute name="GET"/>
                 <Value>allow</Value>
             </AttributeValuePair>
         </Rule>
         <Rule name="rule_Innloggingsinfo_001_04">
+            <ServiceName name="iPlanetAMWebAgentService"/>
+            <ResourceName name="https://${DomainName}/innloggingsinfo/css/index.css"/>
+            <AttributeValuePair>
+                <Attribute name="GET"/>
+                <Value>allow</Value>
+            </AttributeValuePair>
+        </Rule>
+        <Rule name="rule_Innloggingsinfo_001_05">
+            <ServiceName name="iPlanetAMWebAgentService"/>
+            <ResourceName name="https://${DomainName}/innloggingsinfo/js/index.js?*"/>
+            <AttributeValuePair>
+                <Attribute name="GET"/>
+                <Value>allow</Value>
+            </AttributeValuePair>
+        </Rule>
+        <Rule name="rule_Innloggingsinfo_001_06">
             <ServiceName name="iPlanetAMWebAgentService"/>
             <ResourceName name="https://${DomainName}/innloggingsinfo/js/index.js"/>
             <AttributeValuePair>
