@@ -85,7 +85,7 @@
             <Condition name="condition_Innloggingsinfo_001_AuthenticationLevel" type="AuthLevelCondition">
                 <AttributeValuePair>
                     <Attribute name="AuthLevel"/>
-                    <Value>2</Value>
+                    <Value>3</Value>
                 </AttributeValuePair>
             </Condition>
         </Conditions>
