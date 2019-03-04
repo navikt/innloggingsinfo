@@ -106,12 +106,10 @@ function renderFeilmelding(err) {
     lenke.style.display = 'none';
 }
 
-function init() {
+function visInnloggingsnivamelding() {
     fetch('/innloggingsinfo-api/api/tekster')
         .then((res) => {
-            if (res.redirected) {
-                window.location.assign(res.url);
-            } else if (!res.ok) {
+            if (!res.ok) {
                 throw new Error();
             }
             return res;
@@ -120,6 +118,28 @@ function init() {
         .then(render)
         .catch(renderFeilmelding)
         .then(toggleSpinner);
+}
+
+function redirect() {
+    fetch('/innloggingsinfo-api/api/redirecturl')
+        .then((res) => res.text())
+        .then((url) => window.location.assign(url))
+        .catch(renderFeilmelding)
+}
+
+function redirectHvisInnloggingsniva(innloggingsniva) {
+    if(4 == innloggingsniva) {
+        redirect()
+    } else {
+        visInnloggingsnivamelding()
+    }
+}
+
+function init() {
+    fetch('/innloggingsinfo-api/api/authlevel')
+        .then((res) => res.json())
+        .then(redirectHvisInnloggingsniva)
+        .catch(renderFeilmelding);
 }
 
 let readyBound = false;
