@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Innloggingsinfo</title>
+    <script>
+        const ts = Math.floor(Date.now() / 1000);
+        document.write(
+            "<script type='text/javascript' src='/innloggingsinfo/js/index.js?_ts=" + ts + "'><\/script>" +
+            "<link rel='stylesheet' href='/innloggingsinfo/css/index.css?ts=" + ts + "'>"
+        );
+    </script>
+</head>
+<body>
+<div class="pagewrapper">
+    <main id="maincontent" role="main" tabindex="-1">
+        <div class="maincontent side-innhold">
+            <div id="mainapp" class="innloggingsinfo container">
+                <div class="row">
+                    <div class="col-md-9 col-standalone col-sm-12">
+                        <div id="spinner" class="spinner spinner-xxl"></div>
+                        <div id="lastet-innhold" class="panel panel-ramme">
+                            <h1 id="overskrift" class="hode hode-dekorert hode-advarsel blokk-xl">[Tittel]</h1>
+                            <div id="ingress" class="ingress">[Ingress]</div>
+                            <div class="knapperad">
+                                <a href="#" id="videre-lenke" class="knapp knapp-stor knapp-hoved">[videre-lenke]</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
