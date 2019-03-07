@@ -128,7 +128,7 @@ function redirect() {
 }
 
 function redirectHvisInnloggingsniva(innloggingsniva) {
-    if(4 == innloggingsniva) {
+    if(4 === innloggingsniva) {
         redirect()
     } else {
         visInnloggingsnivamelding()
