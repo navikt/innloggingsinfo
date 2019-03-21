@@ -83,7 +83,7 @@ function getConfigparams(params) {
 
 function hentRedirecturl() {
     const params = parselocation(location);
-    const url = new URL('/innloggingsinfo-api/api/redirecturl');
+    const url = new URL('/innloggingsinfo-api/api/redirecturl', window.location.href);
     url.search = new URLSearchParams(getConfigparams(params))
     return fetch(url)
             .then(response => {return response.text()})
