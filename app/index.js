@@ -3,6 +3,7 @@ import PromisePolyfill from 'es6-promise';
 import 'ponyfill-array-find';
 import entries from 'object.entries';
 import parselocation from './utils';
+import tekster from './tekster.json';
 
 if (!Object.entries) {
     entries.shim();
@@ -11,7 +12,6 @@ if (!Object.entries) {
 PromisePolyfill.polyfill();
 
 const injectRegex = /\{([^}]+)\}/g;
-const injectRegexSingle = /\{([^}]+)\}/;
 
 function finnElementer() {
     return {
@@ -21,10 +21,10 @@ function finnElementer() {
     };
 }
 
-export function mestBeskrivendeTekster(type, undertype, alleTekster) {
-    const norskeTekster = alleTekster.nb;
+export function mestBeskrivendeTekster(type, undertype) {
+    const norskeTekster = tekster.nb;
 
-    return ['overskrift', 'ingress', 'knapptekst', 'url']
+    return ['overskrift', 'ingress', 'knapptekst']
         .map((key) => {
             const funnetKey = [`${type}.${undertype}.${key}`, `${type}.${key}`, `${key}`]
                 .find((test) => norskeTekster[test]);
@@ -32,60 +32,37 @@ export function mestBeskrivendeTekster(type, undertype, alleTekster) {
         }).reduce((acc, [key, tekst, funnetKey]) => ({ ...acc, [key]: { tekst, funnetKey } }), {});
 }
 
-export function alleParams(params) {
-    return ({ url }) => {
-        let localUrl = url;
-        while (true) { // eslint-disable-line no-constant-condition
-            const matched = localUrl.match(injectRegexSingle);
-            if (!matched) {
-                break;
-            }
-            const [, capture] = matched;
-            if (!params[capture]) {
-                return false;
-            }
-            localUrl = localUrl.replace(injectRegexSingle, '');
-        }
-        return true;
-    };
-}
-
-export function mestBeskrivendeUrl(type, undertype, tekster, params) {
-    const norskeTekster = tekster.nb;
-    return [`${type}.${undertype}.url`, `${type}.url`, 'url']
-        .filter((test) => norskeTekster[test])
-        .map((test) => ({ url: norskeTekster[test], key: test }))
-        .filter(alleParams(params))
-        .find(() => true);
-}
-
 export function injectVariables(baseStr, values) {
     return baseStr.replace(injectRegex, (_, capture) => values[capture] || capture);
 }
 
-function render(alleTekster) {
+function render() {
     const { overskrift, ingress, lenke } = finnElementer();
     const params = parselocation(location);
-    const { type, undertype, varselid, henvendelsesid, visTekster } = params;
+    const { type, undertype, varselid, henvendelsesid } = params;
 
-    const tekster = Object.entries(mestBeskrivendeTekster(type, undertype, alleTekster))
+    const tekster = Object.entries(mestBeskrivendeTekster(type, undertype))
         .map(([key, tekst]) => {
-            if (visTekster) {
-                return { key, value: tekst.funnetKey };
-            }
             return { key, value: tekst.tekst };
         })
         .reduce((obj, { key, value }) => ({ ...obj, [key]: value }), {});
-    const urlConfig = mestBeskrivendeUrl(type, undertype, alleTekster, params);
 
     overskrift.innerText = tekster.overskrift;
     ingress.innerHTML = tekster.ingress;
     lenke.innerText = tekster.knapptekst;
-    lenke.href = injectVariables(urlConfig.url, { type, undertype, varselid, henvendelsesid });
+    hentRedirecturl(params).then(url => {
+        lenke.href = injectVariables(url, { type, undertype, varselid, henvendelsesid });
+    })
+}
 
-    if (visTekster) {
-        lenke.insertAdjacentHTML('afterend', `<p>Urlen benytter keyen: ${urlConfig.key}</p>`);
-    }
+function renderFeilmelding(err) {
+    console.error(err); // eslint-disable-line no-console
+    const { overskrift, ingress, lenke } = finnElementer();
+    overskrift.innerText = 'Oops';
+    overskrift.classList.remove('hode-advarsel');
+    overskrift.classList.add('hode-feil');
+    ingress.innerText = 'Det skjedde en ukjent feil.';
+    lenke.style.display = 'none';
 }
 
 function toggleSpinner() {
@@ -93,45 +70,37 @@ function toggleSpinner() {
     document.querySelector('#lastet-innhold').style.display = 'block';
 }
 
-function renderFeilmelding(err) {
-    console.error(err); // eslint-disable-line no-console
-    const { overskrift, ingress, lenke } = finnElementer();
-
-    overskrift.innerText = 'Oops';
-    overskrift.classList.remove('hode-advarsel');
-    overskrift.classList.add('hode-feil');
-
-    ingress.innerText = 'Det skjedde en feil ved uthenting av tekster for denne siden.';
-
-    lenke.style.display = 'none';
+function getConfigparams(params) {
+    const { type, undertype, varselid, henvendelsesid} = params;
+    const configparams = {type: type, undertype: undertype, varselid: varselid, henvendelsesid: henvendelsesid}
+    Object.keys(configparams).forEach(key => {
+        if(configparams[key] === undefined) {
+            delete configparams[key]
+        }
+    })
+    return configparams;
 }
 
-function visInnloggingsnivamelding() {
-    fetch('/innloggingsinfo-api/api/tekster')
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error();
-            }
-            return res;
-        })
-        .then((res) => res.json())
-        .then(render)
-        .catch(renderFeilmelding)
-        .then(toggleSpinner);
+function hentRedirecturl() {
+    const params = parselocation(location);
+    const url = new URL('/innloggingsinfo-api/api/redirecturl');
+    url.search = new URLSearchParams(getConfigparams(params))
+    return fetch(url)
+            .then(response => {return response.text()})
+            .catch(renderFeilmelding)
 }
 
-function redirect() {
-    fetch('/innloggingsinfo-api/api/redirecturl')
-        .then((res) => res.text())
-        .then((url) => window.location.assign(url))
-        .catch(renderFeilmelding)
+function redirect(params) {
+    hentRedirecturl(params).then(url => {
+        window.location.assign(url)
+    })
 }
 
 function redirectHvisInnloggingsniva(innloggingsniva) {
     if(4 === innloggingsniva) {
         redirect()
     } else {
-        visInnloggingsnivamelding()
+        render()
     }
 }
 
@@ -139,7 +108,8 @@ function init() {
     fetch('/innloggingsinfo-api/api/authlevel')
         .then((res) => res.json())
         .then(redirectHvisInnloggingsniva)
-        .catch(renderFeilmelding);
+        .catch(renderFeilmelding)
+        .then(toggleSpinner);
 }
 
 let readyBound = false;
