@@ -50,9 +50,11 @@ function render() {
     overskrift.innerText = tekster.overskrift;
     ingress.innerHTML = tekster.ingress;
     lenke.innerText = tekster.knapptekst;
-    hentRedirecturl(params).then(url => {
-        lenke.href = injectVariables(url, { type, undertype, varselid, henvendelsesid });
-    })
+    hentRedirecturl(params)
+        .then(url => {
+            lenke.href = injectVariables(url, { type, undertype, varselid, henvendelsesid });
+        })
+        .then(toggleSpinner)
 }
 
 function renderFeilmelding(err) {
@@ -109,7 +111,6 @@ function init() {
         .then((res) => res.json())
         .then(redirectHvisInnloggingsniva)
         .catch(renderFeilmelding)
-        .then(toggleSpinner);
 }
 
 let readyBound = false;
