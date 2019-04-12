@@ -50,9 +50,11 @@ function render() {
     overskrift.innerText = tekster.overskrift;
     ingress.innerHTML = tekster.ingress;
     lenke.innerText = tekster.knapptekst;
-    hentRedirecturl(params).then(url => {
-        lenke.href = injectVariables(url, { type, undertype, varselid, henvendelsesid });
-    })
+    hentRedirecturl(params)
+        .then(url => {
+            lenke.href = injectVariables(url, { type, undertype, varselid, henvendelsesid });
+        })
+        .then(toggleSpinner)
 }
 
 function renderFeilmelding(err) {
@@ -83,7 +85,7 @@ function getConfigparams(params) {
 
 function hentRedirecturl() {
     const params = parselocation(location);
-    const url = new URL('/innloggingsinfo-api/api/redirecturl', window.location.href);
+    const url = new URL('/innloggingsinfo-api/api/destinasjonsurl', window.location.href);
     url.search = new URLSearchParams(getConfigparams(params))
     return fetch(url)
             .then(response => {return response.text()})
@@ -109,7 +111,6 @@ function init() {
         .then((res) => res.json())
         .then(redirectHvisInnloggingsniva)
         .catch(renderFeilmelding)
-        .then(toggleSpinner);
 }
 
 let readyBound = false;

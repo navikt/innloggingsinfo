@@ -1,10 +1,10 @@
 @appPrefixUrl: "innloggingsinfo";
-@imgDir: "./../img";
 @modig-frontend-root-url: "./node_modules/modig-frontend/modig-frontend-ressurser/src/main/resources";
 
 @import "@{modig-frontend-root-url}/less/includes/variables";
 @import "@{modig-frontend-root-url}/less/includes/mixins";
-@modig-frontend-images-root-url: "./node_modules/modig-frontend/modig-frontend-ressurser/src/main/resources/META-INF/resources/img";
+
+@modig-frontend-images-root-url: "@{modig-frontend-root-url}/META-INF/resources/img";
 
 .innloggingsinfo {
     @import "@{modig-frontend-root-url}/less/nav_extra/typografi";
@@ -19,12 +19,22 @@
 
     .spinner {
         background: none;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .spinner-xxl {
+        &:before {
+            background: data-uri('image/svg+xml;charset=UTF-8', '@{modig-frontend-images-root-url}/spinner/spinner-stroke.svg') no-repeat;
+            background-size: 128px 128px;
+        }
     }
 
     #lastet-innhold {
         display: none;
     }
 }
+
 .side-innhold {
     .knapp:hover {
         margin-bottom: 0;
