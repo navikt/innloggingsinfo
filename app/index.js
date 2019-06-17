@@ -13,6 +13,14 @@ PromisePolyfill.polyfill();
 
 const injectRegex = /\{([^}]+)\}/g;
 
+function rapporterFeilmelding(error) {
+    window.frontendlogger.error({
+        errorname: error.name,
+        message: error.message,
+        error: error.toString()
+    });
+}
+
 function finnElementer() {
     return {
         overskrift: document.querySelector('#overskrift'),
@@ -59,6 +67,8 @@ function render() {
 
 function renderFeilmelding(err) {
     console.error(err); // eslint-disable-line no-console
+    rapporterFeilmelding(err);
+
     const { overskrift, ingress, lenke } = finnElementer();
     overskrift.innerText = 'Oops';
     overskrift.classList.remove('hode-advarsel');
@@ -79,7 +89,7 @@ function getConfigparams(params) {
         if(configparams[key] === undefined) {
             delete configparams[key]
         }
-    })
+    });
     return configparams;
 }
 
@@ -119,5 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     readyBound = true;
-    init();
+    try {
+        init();
+    } catch (error) {
+        rapporterFeilmelding(error);
+        throw error;
+    }
 });
