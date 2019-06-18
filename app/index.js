@@ -75,6 +75,8 @@ function renderFeilmelding(err) {
     overskrift.classList.add('hode-feil');
     ingress.innerText = 'Det skjedde en ukjent feil.';
     lenke.style.display = 'none';
+
+    toggleSpinner();
 }
 
 function toggleSpinner() {
