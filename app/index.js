@@ -1,4 +1,5 @@
 import 'whatwg-fetch';
+import 'url-search-params-polyfill';
 import PromisePolyfill from 'es6-promise';
 import 'ponyfill-array-find';
 import entries from 'object.entries';
