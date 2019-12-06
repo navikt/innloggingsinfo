@@ -1,0 +1,105 @@
+version: 2.1
+orbs:
+  nais: 'navikt/nais-deployment@3.2.0'
+
+jobs:
+  bygg-og-push-docker:
+    docker:
+      - image: circleci/node:7.10
+        environment:
+          TZ: "Europe/Oslo"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: npm install
+          command: |
+            npm ci
+      - run:
+          name: npm build
+          command: npm run build
+      - setup_remote_docker
+      - run:
+          name: Docker build
+          command: docker build -t "navikt/innloggingsinfo:$CIRCLE_SHA1" -t "navikt/innloggingsinfo:latest" .
+      - run:
+          name: Docker push
+          command: |
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+            docker push "navikt/innloggingsinfo:$CIRCLE_SHA1"
+            docker push "navikt/innloggingsinfo:latest"
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+  deploy-q6:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: q6
+          environment: dev-sbs
+  deploy-q1:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: q1
+          environment: dev-sbs
+  deploy-q0:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: q0
+          environment: dev-sbs
+
+commands:
+  nais-deploy:
+    description: Deploy til miljø
+    parameters:
+      namespace:
+        type: string
+      environment:
+        type: string
+    steps:
+      - checkout
+      - nais/deploy-with-gh-app:
+          repo: navikt/innloggingsinfo
+          image: navikt/innloggingsinfo
+          github-app-id: 34043
+          nais-template: nais/nais.yaml
+          environment: << parameters.environment >>
+          team: personbruker
+          enable-vars: true
+          template-vars: nais/<< parameters.environment >>/<< parameters.namespace >>.json
+
+workflows:
+  bygg-og-deploy:
+    jobs:
+      - bygg-og-push-docker:
+          context: NAIS deployment
+      - til-q6:
+          type: approval
+          requires:
+            - bygg-og-push-docker
+      - deploy-q6:
+          requires:
+            - til-q6
+      - til-q1:
+          type: approval
+          requires:
+            - deploy-q6
+      - deploy-q1:
+          requires:
+            - til-q1
+      - til-q0:
+          type: approval
+          requires:
+            - deploy-q1
+          filters:
+            branches:
+              only: master
+      - deploy-q0:
+          requires:
+            - til-q0

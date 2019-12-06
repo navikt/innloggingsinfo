@@ -6,10 +6,8 @@ metadata:
   labels:
     team: personbruker
 spec:
-  image: navikt/innloggingsinfo:0.0.01
-  ingresses:
-    - https://innloggingsinfo-q1.dev-sbs.nais.io
-    - https://tjenester-q1.nav.no/innloggingsinfo
+  image: {{version}}
+  ingresses: {{ingresses}}
   vault:
     enabled: true
   liveness:

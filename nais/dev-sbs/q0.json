@@ -1,0 +1,7 @@
+{
+  "namespace": "q0",
+  "ingresses": [
+    "https://innloggingsinfo-q0.dev-sbs.nais.io",
+    "https://tjenester-q0.nav.no/innloggingsinfo"
+  ]
+}
