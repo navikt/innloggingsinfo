@@ -2,3 +2,5 @@ node_modules
 *.iml
 .idea
 build
+.DS_Store
+.circleci/.DS_Store
