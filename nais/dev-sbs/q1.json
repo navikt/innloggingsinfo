@@ -1,7 +1,7 @@
 {
   "namespace": "q1",
   "ingresses": [
-    "https://innloggingsinfo-q1.dev-sbs.nais.io",
-    "https://tjenester-q1.nav.no/innloggingsinfo"
+    "https://tjenester-q1.nav.no/innloggingsinfo",
+    "https://innloggingsinfo-q1.nais.oera-q.local"
   ]
 }
