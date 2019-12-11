@@ -2,6 +2,7 @@
   "namespace": "q0",
   "ingresses": [
     "https://tjenester-q0.nav.no/innloggingsinfo",
-    "https://innloggingsinfo-q0.nais.oera-q.local"
+    "https://innloggingsinfo-q0.nais.oera-q.local",
+    "https://innloggingsinfo-q0.dev-sbs.nais.io"
   ]
 }
