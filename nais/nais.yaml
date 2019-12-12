@@ -17,7 +17,6 @@ spec:
   port: 8080
   prometheus:
     enabled: true
-    port: https
     path: innloggingsinfo/internal/metrics
   readiness:
     path: innloggingsinfo/internal/isReady
