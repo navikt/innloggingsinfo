@@ -68,8 +68,8 @@ jobs:
     executor: nais/deployment-cli
     steps:
       - nais-deploy:
-          namespace: q1
-          environment: dev-sbs
+          namespace: default
+          environment: prod-sbs
 
 commands:
   nais-deploy:
@@ -115,17 +115,17 @@ workflows:
             - bygg-og-push-docker
           filters:
             branches:
-              only: feature/PB-273-naiserator
-      - bekreft-release-q1:
+              only: master
+      - bekreft-release:
           type: approval
           requires:
             - automatisk-deploy-q1
           filters:
             branches:
-              only: feature/PB-273-naiserator
+              only: master
       - release:
           requires:
-            - bekreft-release-q1
+            - bekreft-release
       - til-q0:
           type: approval
           requires:
