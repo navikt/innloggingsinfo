@@ -3,7 +3,7 @@ orbs:
   nais: 'navikt/nais-deployment@3.2.0'
 
 jobs:
-  bygg-og-push-docker:
+  bygg-npm:
     docker:
       - image: circleci/node:10.0.0
         environment:
@@ -20,20 +20,35 @@ jobs:
       - run:
           name: npm build
           command: npm run build
-      - setup_remote_docker
-      - run:
-          name: Docker build
-          command: docker build -t "navikt/innloggingsinfo:$CIRCLE_SHA1" -t "navikt/innloggingsinfo:latest" .
-      - run:
-          name: Docker push
-          command: |
-            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
-            docker push "navikt/innloggingsinfo:$CIRCLE_SHA1"
-            docker push "navikt/innloggingsinfo:latest"
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/*
+            - Dockerfile
+  docker-bygg-og-push-uten-latest:
+    executor: nais/deployment-cli
+    steps:
+      - docker-deploy:
+          description: Docker build og push, uten latest
+          command: |
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+            docker build -t "navikt/innloggingsinfo:$CIRCLE_SHA1" .
+            docker push "navikt/innloggingsinfo:$CIRCLE_SHA1"
+  docker-bygg-og-push-med-latest:
+    executor: nais/deployment-cli
+    steps:
+      - docker-deploy:
+          description: Docker build og push, med latest
+          command: |
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+              docker build -t "navikt/innloggingsinfo:$CIRCLE_SHA1" -t "navikt/innloggingsinfo:latest" .
+              docker push "navikt/innloggingsinfo:$CIRCLE_SHA1"
+              docker push "navikt/innloggingsinfo:latest"
+
   deploy-q6:
     executor: nais/deployment-cli
     steps:
@@ -72,6 +87,20 @@ jobs:
           environment: prod-sbs
 
 commands:
+  docker-deploy:
+    description: Bygg og push Docker-image
+    parameters:
+      description:
+        type: string
+      command:
+        type: string
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: .
+      - run:
+          name: << parameters.description >>
+          command: << parameters.command >>
   nais-deploy:
     description: Deploy til miljø
     parameters:
@@ -94,12 +123,27 @@ commands:
 workflows:
   bygg-og-deploy:
     jobs:
-      - bygg-og-push-docker:
+      - bygg-npm:
+      - docker-bygg-og-push-uten-latest:
           context: NAIS deployment
+          requires:
+            - bygg-npm
+          filters:
+            branches:
+              ignore:
+                - master
+      - docker-bygg-og-push-med-latest:
+          context: NAIS deployment
+          requires:
+            - bygg-npm
+          filters:
+            branches:
+              only:
+                - master
       - til-q6:
           type: approval
           requires:
-            - bygg-og-push-docker
+            - docker-bygg-og-push-uten-latest
       - deploy-q6:
           requires:
             - til-q6
@@ -112,7 +156,7 @@ workflows:
             - til-q1
       - automatisk-deploy-q1:
           requires:
-            - bygg-og-push-docker
+            - docker-bygg-og-push-med-latest
           filters:
             branches:
               only: master
@@ -129,7 +173,7 @@ workflows:
       - til-q0:
           type: approval
           requires:
-            - bygg-og-push-docker
+            - docker-bygg-og-push-uten-latest
       - deploy-q0:
           requires:
             - til-q0
