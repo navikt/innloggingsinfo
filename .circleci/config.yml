@@ -27,7 +27,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - target/*
+            - build/*
             - Dockerfile
   docker-bygg-og-push-uten-latest:
     executor: nais/deployment-cli
