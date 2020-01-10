@@ -1,0 +1,182 @@
+version: 2.1
+orbs:
+  nais: 'navikt/nais-deployment@3.2.0'
+
+jobs:
+  bygg-npm:
+    docker:
+      - image: circleci/node:10.17.0
+        environment:
+          TZ: "Europe/Oslo"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: npm install
+          command: npm install
+      - run:
+          name: npm build
+          command: npm run build
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/*
+            - Dockerfile
+  docker-bygg-og-push-uten-latest:
+    executor: nais/deployment-cli
+    steps:
+      - docker-deploy:
+          description: Docker build og push, uten latest
+          command: |
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+            docker build -t "navikt/innloggingsinfo:$CIRCLE_SHA1" .
+            docker push "navikt/innloggingsinfo:$CIRCLE_SHA1"
+  docker-bygg-og-push-med-latest:
+    executor: nais/deployment-cli
+    steps:
+      - docker-deploy:
+          description: Docker build og push, med latest
+          command: |
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
+              docker build -t "navikt/innloggingsinfo:$CIRCLE_SHA1" -t "navikt/innloggingsinfo:latest" .
+              docker push "navikt/innloggingsinfo:$CIRCLE_SHA1"
+              docker push "navikt/innloggingsinfo:latest"
+
+  deploy-q6:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: q6
+          environment: dev-sbs
+  deploy-q1:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: q1
+          environment: dev-sbs
+  automatisk-deploy-q1:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: q1
+          environment: dev-sbs
+  deploy-q0:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: q0
+          environment: dev-sbs
+  automatisk-deploy-q0:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: q0
+          environment: dev-sbs
+  release:
+    executor: nais/deployment-cli
+    steps:
+      - nais-deploy:
+          namespace: default
+          environment: prod-sbs
+
+commands:
+  docker-deploy:
+    description: Bygg og push Docker-image
+    parameters:
+      description:
+        type: string
+      command:
+        type: string
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: .
+      - run:
+          name: << parameters.description >>
+          command: << parameters.command >>
+  nais-deploy:
+    description: Deploy til miljø
+    parameters:
+      namespace:
+        type: string
+      environment:
+        type: string
+    steps:
+      - checkout
+      - nais/deploy-with-gh-app:
+          repo: navikt/innloggingsinfo
+          image: navikt/innloggingsinfo
+          github-app-id: 34043
+          nais-template: nais/nais.yaml
+          environment: << parameters.environment >>
+          team: personbruker
+          enable-vars: true
+          template-vars: nais/<< parameters.environment >>/<< parameters.namespace >>.json
+
+workflows:
+  bygg-og-deploy:
+    jobs:
+      - bygg-npm
+      - docker-bygg-og-push-uten-latest:
+          context: NAIS deployment
+          requires:
+            - bygg-npm
+          filters:
+            branches:
+              ignore:
+                - master
+      - docker-bygg-og-push-med-latest:
+          context: NAIS deployment
+          requires:
+            - bygg-npm
+          filters:
+            branches:
+              only:
+                - master
+      - til-q6:
+          type: approval
+          requires:
+            - docker-bygg-og-push-uten-latest
+      - deploy-q6:
+          requires:
+            - til-q6
+      - til-q1:
+          type: approval
+          requires:
+            - deploy-q6
+      - deploy-q1:
+          requires:
+            - til-q1
+      - automatisk-deploy-q1:
+          requires:
+            - docker-bygg-og-push-med-latest
+          filters:
+            branches:
+              only: master
+      - bekreft-release:
+          type: approval
+          requires:
+            - automatisk-deploy-q1
+          filters:
+            branches:
+              only: master
+      - release:
+          requires:
+            - bekreft-release
+      - til-q0:
+          type: approval
+          requires:
+            - docker-bygg-og-push-uten-latest
+      - deploy-q0:
+          requires:
+            - til-q0
+      - automatisk-deploy-q0:
+          requires:
+            - release
