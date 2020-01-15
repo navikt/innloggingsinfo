@@ -9,7 +9,7 @@
     "init:clean": "rimraf ./build",
     "init:setup": "mkdirp ./build/js ./build/css",
     "build:js": "browserify ./app/index.js -o ./build/js/index.js -t [ babelify ]",
-    "build:less": "lessc ./app/index.less ./build/css/index.big.css",
+    "build:less": "lessc app/index.less ./build/css/index.big.css",
     "build:html": "copyfiles -f ./app/index.html ./build && copyfiles -f ./app/internal/* ./build/internal",
     "prod:js": "uglifyjs ./build/js/index.js -o ./build/js/index.js -c -m",
     "prod:less": "uglifycss ./build/css/index.big.css > ./build/css/index.css && rimraf ./build/css/index.big.css",
