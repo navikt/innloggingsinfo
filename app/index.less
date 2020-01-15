@@ -49,7 +49,7 @@ body {
     font-family: Arial,sans-serif;
     line-height: 1.42857143;
     color: #3e3832;
-    background-color: #efefef;
+    background-color: #E9E7E7;
 }
 
 .pagewrapper {
@@ -145,4 +145,38 @@ article, aside, details, figcaption, figure, footer, header, main, menu, nav, se
         padding-top: 60px;
     }
 }
+
+.lenke-fremhevet, .side-innhold a:not(.knapp) {
+    border-bottom: 1px solid #b7b1a9;
+}
+
+.lenke-fremhevet:active, .side-innhold a:not(.knapp):active {
+    border-bottom-color: #634689;
+}
+
+.lenke-fremhevet:hover, .side-innhold a:not(.knapp):hover {
+    border-bottom-color: #0067c5;
+}
+
+a {
+    color: #0067c5;
+    text-decoration: none;
+    background-color: transparent;
+
+    &:active {
+        color: #634689;
+        outline: 0;
+
+    }
+
+    &:hover {
+        outline: 0;
+    }
+
+    &:focus {
+        background-color: #ffbd66;
+        outline: none;
+    }
+}
+
 
