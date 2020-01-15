@@ -6,12 +6,16 @@
 
 @modig-frontend-images-root-url: "@{modig-frontend-root-url}/META-INF/resources/img";
 
+#maincontent { //Avoid blue lines around main content
+    outline: none;
+}
+
 .innloggingsinfo {
     @import "@{modig-frontend-root-url}/less/nav_extra/typografi";
     @import "@{modig-frontend-root-url}/less/nav_extra/paneler";
     @import "@{modig-frontend-root-url}/less/nav_extra/lister";
     @import "@{modig-frontend-root-url}/less/nav_extra/hoder";
-    @import "@{modig-frontend-root-url}/less/nav_extra/knapper"; //  @import "@{modig-frontend-root-url}/less/decorator/knapper";
+    @import "@{modig-frontend-root-url}/less/nav_extra/knapper";
     @import "@{modig-frontend-root-url}/less/decorator/utilities";
     @import "@{modig-frontend-root-url}/less/nav_extra/utilities";
     @import "@{modig-frontend-root-url}/less/nav_extra/knapperader";
