@@ -24,7 +24,7 @@
   "author": "NAV",
   "license": "MIT",
   "dependencies": {
-    "es6-promise": "4.2.6",
+    "es6-promise": "4.2.8",
     "modig-frontend": "git+https://github.com/navikt/modig-frontend.git",
     "object.entries": "^1.0.3",
     "ponyfill-array-find": "1.0.1",
