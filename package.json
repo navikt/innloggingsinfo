@@ -31,7 +31,7 @@
     "url-pattern": "1.0.3",
     "url-polyfill": "^1.1.5",
     "url-search-params-polyfill": "^6.0.0",
-    "whatwg-fetch": "1.0.0"
+    "whatwg-fetch": "1.1.1"
   },
   "devDependencies": {
     "babel": "6.5.2",
