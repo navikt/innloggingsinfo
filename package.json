@@ -29,7 +29,7 @@
     "object.entries": "^1.0.3",
     "ponyfill-array-find": "1.0.1",
     "url-pattern": "1.0.3",
-    "url-polyfill": "^1.1.5",
+    "url-polyfill": "^1.1.10",
     "url-search-params-polyfill": "^6.0.0",
     "whatwg-fetch": "1.0.0"
   },
