@@ -1,7 +1,7 @@
 {
   "namespace": "personbruker",
   "ingresses": [
-    "https://www.dev.nav.no/innlogingsinfo",
+    "https://www.dev.nav.no/innloggingsinfo",
     "https://innlogingsinfo.personbruker.nais.oera-q.local"
   ]
 }
