@@ -22,7 +22,7 @@ spec:
     enabled: true
     path: innloggingsinfo/internal/metrics
   readiness:
-    path: innloggingsinfo/internal/isReady
+    path: innloggingsinfo/internal/isAlive
     port: 8080
     initialDelay: 10
   replicas:
