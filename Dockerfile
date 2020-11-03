@@ -3,6 +3,7 @@ FROM navikt/pus-decorator
 ENV APPLICATION_NAME=innloggingsinfo
 ENV CONTEXT_PATH=innloggingsinfo
 ENV FOOTER_TYPE=WITH_ALPHABET
+ENV DISABLE_UNLEASH=true
 COPY ./build /app
 
 ENV PORT=8080
