@@ -1,10 +1,14 @@
-FROM navikt/pus-decorator
+FROM node:11-alpine
+ENV NODE_ENV production
 
-ENV APPLICATION_NAME=innloggingsinfo
-ENV CONTEXT_PATH=innloggingsinfo
-ENV FOOTER_TYPE=WITH_ALPHABET
-ENV DISABLE_UNLEASH=true
-COPY ./build /app
+WORKDIR usr/src/app
+COPY server server/
+COPY build ./build
+
+WORKDIR server
+RUN npm install
+
+CMD ["node", "./server.js"]
 
 ENV PORT=8080
 EXPOSE $PORT
