@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "/var/run/secrets/nais.io/vault/decorator_url.env" });
+require("./appdynamics");
 const express = require("express");
 const promBundle = require("express-prom-bundle");
 const path = require("path");
@@ -8,6 +9,7 @@ const buildPath = path.resolve(__dirname, "../build");
 const basePath = "/innloggingsinfo";
 const logger = require("./logger");
 const server = express();
+
 const prometheus = promBundle({
   includePath: true,
   metricsPath: `${basePath}/internal/metrics`
