@@ -15,7 +15,7 @@ const prometheus = promBundle({
   metricsPath: `${basePath}/internal/metrics`
 });
 
-server.set("views", `${__dirname}/../dist`);
+server.set("views", `${__dirname}/../build`);
 server.set("view engine", "mustache");
 server.engine("html", mustacheExpress());
 
