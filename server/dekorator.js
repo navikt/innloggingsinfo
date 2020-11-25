@@ -19,7 +19,7 @@ const getDecorator = () =>
     if (decorator) {
       resolve(decorator);
     } else {
-      const url = `${process.env.DECORATOR_URL}/?redirectToApp=true`;
+      const url = `${process.env.DECORATOR_URL}`;
 
       request(url, (error, response, body) => {
         if (!error && response.statusCode >= 200 && response.statusCode < 400) {
