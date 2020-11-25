@@ -5,6 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Innloggingsinfo</title>
+    {{{STYLES}}}
+    <script type="application/javascript">
+      window.frontendlogger = {
+        info: function () {},
+        warn: function () {},
+        error: function () {},
+        event: function () {},
+      };
+      window.frontendlogger.appname = "utbetalingsoversikt";
+    </script>
+    <script type="application/javascript" src="/frontendlogger/logger.js">
+    </script>
     <script>
         const ts = Math.floor(Date.now() / 1000);
         document.write(
@@ -14,6 +26,7 @@
     </script>
 </head>
 <body>
+{{{HEADER}}}
 <div class="pagewrapper">
     <main id="maincontent" role="main" tabindex="-1">
         <div class="maincontent side-innhold">
@@ -34,6 +47,6 @@
         </div>
     </main>
 </div>
-
+{{{FOOTER}}} {{{SCRIPTS}}}
 </body>
 </html>
