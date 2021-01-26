@@ -2,7 +2,6 @@
   "namespace": "personbruker",
   "ingresses": [
     "https://innloggingsinfo.nais.oera.no",
-    "https://innloggingsinfo.prod-sbs.nais.io",
     "https://tjenester.nav.no/innloggingsinfo"
   ]
 }
