@@ -97,6 +97,7 @@ function getConfigparams(params) {
     });
     return configparams;
 }
+const url = new URL('/innloggingsinfo-api', window.location.href);
 
 function hentRedirecturl() {
     const params = parselocation(location);
