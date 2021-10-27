@@ -3,7 +3,7 @@ echo "Running run-script.sh"
 
 if [ -z "$INNLOGGINGSINFO_API_URL" ]; then
   echo "INNLOGGINGSINFO_API_URL is not set, exporting"
-  export $(/var/run/secrets/nais.io/vault/innloggingsinfo_api_url.env | xargs)
+  export $(cat /var/run/secrets/nais.io/vault/innloggingsinfo_api_url.env | xargs)
 else
   echo "INNLOGGINGSINFO_API_URL already set"
 fi
