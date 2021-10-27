@@ -9,6 +9,9 @@ COPY run-script.sh ./run-script.sh
 RUN apk update && apk add bash
 RUN chmod +x ./run-script.sh
 
+RUN chown 1069 ./build
+RUN chmod u+rw ./build
+
 WORKDIR server
 RUN npm install
 
