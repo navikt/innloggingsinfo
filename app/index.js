@@ -98,7 +98,6 @@ function getConfigparams(params) {
     });
     return configparams;
 }
-const url = new URL(INNLOGGINGSINFO_API_URL);
 
 function hentRedirecturl() {
     const params = parselocation(location);
