@@ -15,6 +15,7 @@ PromisePolyfill.polyfill();
 
 const injectRegex = /\{([^}]+)\}/g;
 const MED_CREDENTIALS = { credentials: 'include' };
+const INNLOGGINGSINFO_API_URL = window.env.INNLOGGINGSINFO_API_URL;
 
 function rapporterFeilmelding(error) {
     window.frontendlogger.error({
@@ -100,7 +101,7 @@ function getConfigparams(params) {
 
 function hentRedirecturl() {
     const params = parselocation(location);
-    const url = new URL('/innloggingsinfo-api/api/destinasjonsurl', window.location.href);
+    const url = new URL(`${INNLOGGINGSINFO_API_URL}/destinasjonsurl`);
     url.search = new URLSearchParams(getConfigparams(params))
     return fetch(url, MED_CREDENTIALS)
             .then(response => {return response.text()})
@@ -122,7 +123,7 @@ function redirectHvisInnloggingsniva(innloggingsniva) {
 }
 
 function init() {
-    fetch('/innloggingsinfo-api/api/authlevel', MED_CREDENTIALS)
+    fetch(`${INNLOGGINGSINFO_API_URL}/authlevel`, MED_CREDENTIALS)
         .then((res) => res.json())
         .then(redirectHvisInnloggingsniva)
         .catch(renderFeilmelding)
