@@ -8,7 +8,11 @@ else
   echo "INNLOGGINGSINFO_API_URL already set"
 fi
 
-echo "window.env={};" > ../build/config.js
-echo "window.env.INNLOGGINGSINFO_API_URL=\"$INNLOGGINGSINFO_API_URL\";" >> ../build/config.js
+VARS_BLOCK="window.env={};
+window.env.INNLOGGINGSINFO_API_URL=\"$INNLOGGINGSINFO_API_URL\";"
+
+VARS_BLOCK=$(echo $VARS_BLOCK | tr -d '\n')
+
+printf '%s\n%s\n' "$VARS_BLOCK" "$(cat ../build/js/index.js)" > ../build/js/index.js
 
 node ./server.js
