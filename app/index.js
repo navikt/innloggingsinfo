@@ -16,6 +16,7 @@ PromisePolyfill.polyfill();
 const injectRegex = /\{([^}]+)\}/g;
 const MED_CREDENTIALS = { credentials: 'include' };
 const INNLOGGINGSINFO_API_URL = window.env.INNLOGGINGSINFO_API_URL;
+const ALLOW_LOGIN = window.env.ALLOW_LOGIN;
 
 function rapporterFeilmelding(error) {
     window.frontendlogger.error({
@@ -69,9 +70,7 @@ function render() {
         .then(toggleSpinner)
 }
 
-function renderFeilmelding(err) {
-    console.error(err); // eslint-disable-line no-console
-    rapporterFeilmelding(err);
+function renderFeilmelding() {
 
     const { overskrift, ingress, lenke } = finnElementer();
     overskrift.innerText = 'Oops';
@@ -122,8 +121,27 @@ function redirectHvisInnloggingsniva(innloggingsniva) {
     }
 }
 
+function verifyResponse(response) {
+    if (response.status === 401) {
+        handleUnauthorized()
+    } else if (!response.ok) {
+        throw Error(response.statusText);
+    } else {
+        return response
+    }
+}
+
+function handleUnauthorized() {
+    if (ALLOW_LOGIN === 'true') {
+        window.location.assign(`${INNLOGGINGSINFO_API_URL}/login?redirect_uri=${encodeURIComponent(window.location.href)}`);
+    } else {
+        renderFeilmelding()
+    }
+}
+
 function init() {
-    fetch(`${INNLOGGINGSINFO_API_URL}/authlevel`, MED_CREDENTIALS)
+    fetch(`${INNLOGGINGSINFO_API_URL}/authlevel`, { credentials: 'include' })
+        .then(verifyResponse)
         .then((res) => res.json())
         .then(redirectHvisInnloggingsniva)
         .catch(renderFeilmelding)
