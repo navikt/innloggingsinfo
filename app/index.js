@@ -124,6 +124,7 @@ function redirectHvisInnloggingsniva(innloggingsniva) {
 function verifyResponse(response) {
     if (response.status === 401) {
         handleUnauthorized()
+        return response
     } else if (!response.ok) {
         throw Error(response.statusText);
     } else {
