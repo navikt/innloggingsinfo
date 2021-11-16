@@ -70,7 +70,13 @@ function render() {
         .then(toggleSpinner)
 }
 
-function renderFeilmelding() {
+function handleRejectedPromise(err) {
+    if (err === 'redirecting') {
+        return;
+    }
+
+    console.error(err);
+    rapporterFeilmelding(err);
 
     const { overskrift, ingress, lenke } = finnElementer();
     overskrift.innerText = 'Oops';
@@ -104,7 +110,7 @@ function hentRedirecturl() {
     url.search = new URLSearchParams(getConfigparams(params))
     return fetch(url, MED_CREDENTIALS)
             .then(response => {return response.text()})
-            .catch(renderFeilmelding)
+            .catch(handleRejectedPromise)
 }
 
 function redirect(params) {
@@ -122,21 +128,19 @@ function redirectHvisInnloggingsniva(innloggingsniva) {
 }
 
 function verifyResponse(response) {
-    if (response.status === 401) {
-        handleUnauthorized()
-        return response
-    } else if (!response.ok) {
-        throw Error(response.statusText);
+    if (!response.ok) {
+        handleNotOkResponse(response.status, response.statusText);
     } else {
         return response
     }
 }
 
-function handleUnauthorized() {
-    if (ALLOW_LOGIN === 'true') {
+function handleNotOkResponse(status, statusText) {
+    if (status === 401 && ALLOW_LOGIN === 'true') {
         window.location.assign(`${INNLOGGINGSINFO_API_URL}/login?redirect_uri=${encodeURIComponent(window.location.href)}`);
+        return Promise.reject('redirecting')
     } else {
-        renderFeilmelding()
+        throw Error(statusText);
     }
 }
 
@@ -145,7 +149,7 @@ function init() {
         .then(verifyResponse)
         .then((res) => res.json())
         .then(redirectHvisInnloggingsniva)
-        .catch(renderFeilmelding)
+        .catch(handleRejectedPromise)
 }
 
 let readyBound = false;
