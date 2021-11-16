@@ -145,7 +145,6 @@ function init() {
         .then(verifyResponse)
         .then((res) => res.json())
         .then(redirectHvisInnloggingsniva)
-        .catch(renderFeilmelding)
 }
 
 let readyBound = false;
@@ -157,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         init();
     } catch (error) {
+        renderFeilmelding();
         rapporterFeilmelding(error);
         throw error;
     }
