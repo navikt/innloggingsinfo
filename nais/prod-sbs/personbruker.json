@@ -1,7 +1,0 @@
-{
-  "namespace": "personbruker",
-  "ingresses": [
-    "https://innloggingsinfo.nais.oera.no",
-    "https://tjenester.nav.no/innloggingsinfo"
-  ]
-}

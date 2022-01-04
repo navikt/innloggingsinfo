@@ -2,17 +2,16 @@ kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
   name: innloggingsinfo
-  namespace: {{namespace}}
+  namespace: personbruker
   labels:
     team: personbruker
   annotations:
-    nais.io/read-only-file-system: "false"  
+    nais.io/read-only-file-system: "false"
 spec:
   image: {{version}}
   ingresses:
-  {{#each ingresses}}
-     - "{{this}}"
-  {{/each}}
+    - "https://innloggingsinfo.nais.oera.no"
+    - "https://tjenester.nav.no/innloggingsinfo"
   vault:
     enabled: true
   liveness:
@@ -36,5 +35,5 @@ spec:
       cpu: "3"
       memory: 768Mi
     requests:
-      cpu: "500m"
-      memory: 512Mi
+      cpu: "50m"
+      memory: 384Mi
