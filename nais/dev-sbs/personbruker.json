@@ -1,8 +1,0 @@
-{
-  "namespace": "personbruker",
-  "ingresses": [
-    "https://tjenester-q1.nav.no/innloggingsinfo",
-    "https://www.dev.nav.no/innloggingsinfo",
-    "https://innloggingsinfo.dev.nav.no/innloggingsinfo"
-  ]
-}
