@@ -1,5 +1,5 @@
 require("dotenv").config({ path: "/var/run/secrets/nais.io/vault/decorator_url.env" });
-require("./appdynamics");
+
 const express = require("express");
 const promBundle = require("express-prom-bundle");
 const path = require("path");
