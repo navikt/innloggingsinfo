@@ -10,7 +10,8 @@ metadata:
 spec:
   image: {{version}}
   ingresses:
-    - "https://person.intern.nav.no/innloggingsinfo"
+    - "https://tjenester.nav.no/innloggingsinfo"
+    - "https://tjenester.intern.nav.no/innloggingsinfo"
   envFrom:
     - secret: innloggingsinfo-secrets
   liveness:
